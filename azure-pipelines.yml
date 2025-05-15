@@ -19,7 +19,7 @@ stages:
   jobs:
   - job: BuildJob
     pool:
-      name: Default  # Make sure your self-hosted agent is in the "Default" pool
+      name: SelfHostedLocal  # ✅ Your custom self-hosted agent pool
     steps:
     - checkout: self
     - checkout: firstAppRepo  # Checkout the external GitHub repo
