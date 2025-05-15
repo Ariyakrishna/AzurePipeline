@@ -1,0 +1,21 @@
+trigger: none  # disable CI trigger for this repo
+
+resources:
+  repositories:
+    - repository: firstAppRepo
+      type: github
+      name: Ariyakrishna/first-app
+      ref: refs/heads/main  # adjust if using another branch
+      trigger:
+        branches:
+          include:
+            - main  # or the branch you want to track
+
+stages:
+- stage: Build
+  jobs:
+  - job: BuildJob
+    steps:
+    - checkout: self
+    - checkout: firstAppRepo  # checkout the external repo
+    - script: echo "Triggering build because Ariyakrishna/first-app changed"
