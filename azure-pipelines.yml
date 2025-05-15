@@ -5,6 +5,7 @@ resources:
     - repository: firstAppRepo
       type: github
       name: Ariyakrishna/first-app
+      endpoint: Ariyakrishna
       ref: refs/heads/main  # adjust if using another branch
       trigger:
         branches:
