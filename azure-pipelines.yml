@@ -1,4 +1,6 @@
-trigger: none  # disable CI trigger for this repo
+name: 'SelfHostedLocal'  # Pipeline run name
+
+trigger: none  # Disable CI trigger for current repo
 
 resources:
   repositories:
@@ -6,17 +8,19 @@ resources:
       type: github
       name: Ariyakrishna/first-app
       endpoint: Ariyakrishna
-      ref: refs/heads/main  # adjust if using another branch
+      ref: refs/heads/main
       trigger:
         branches:
           include:
-            - main  # or the branch you want to track
+            - main
 
 stages:
 - stage: Build
   jobs:
   - job: BuildJob
+    pool:
+      name: Default  # Make sure your self-hosted agent is in the "Default" pool
     steps:
     - checkout: self
-    - checkout: firstAppRepo  # checkout the external repo
+    - checkout: firstAppRepo  # Checkout the external GitHub repo
     - script: echo "Triggering build because Ariyakrishna/first-app changed"
