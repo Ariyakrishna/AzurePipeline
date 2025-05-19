@@ -4,9 +4,9 @@ trigger: none  # Disable CI trigger for current repo
 
 resources:
   repositories:
-    - repository: firstAppRepo
+    - repository: TestRepo
       type: github
-      name: Ariyakrishna/first-app
+      name: Ariyakrishna/TestRepo
       endpoint: Ariyakrishna
       ref: refs/heads/main
       trigger:
@@ -19,8 +19,8 @@ stages:
   jobs:
   - job: BuildJob
     pool:
-      name: SelfHostedLocal  # ✅ Your custom self-hosted agent pool
+      name: SelfHostedLocal
     steps:
     - checkout: self
-    - checkout: firstAppRepo  # Checkout the external GitHub repo
-    - script: echo "Triggering build because Ariyakrishna/first-app changed"
+    - checkout: TestRepo  # ✅ Fixed alias
+    - script: echo "Triggering build because Ariyakrishna/TestRepo changed"
