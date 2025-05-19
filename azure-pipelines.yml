@@ -1,26 +1,74 @@
-name: 'SelfHostedLocal'  # Pipeline run name
+name: 'SelfHostedLocal'
 
-trigger: none  # Disable CI trigger for current repo
+trigger: none  # Disable CI for this repo
 
 resources:
   repositories:
     - repository: TestRepo
       type: github
-      name: Ariyakrishna/TestRepo
-      endpoint: Ariyakrishna
+      name: Ariyakrishna/TestRepo  # ✅ Your actual GitHub repo
+      endpoint: Ariyakrishna       # ✅ GitHub service connection
       ref: refs/heads/main
       trigger:
         branches:
           include:
-            - main
+            - main  # Auto-trigger on changes to this repo
 
 stages:
 - stage: Build
+  displayName: 'Build and Package React App'
   jobs:
   - job: BuildJob
+    displayName: 'Build Job'
     pool:
       name: SelfHostedLocal
     steps:
-    - checkout: self
-    - checkout: TestRepo  # ✅ Fixed alias
-    - script: echo "Triggering build because Ariyakrishna/TestRepo changed"
+    - checkout: TestRepo  # ✅ External GitHub repo checkout
+
+    - task: NodeTool@0
+      inputs:
+        versionSpec: '20.x'
+      displayName: 'Install Node.js'
+
+    - script: |
+        npm install
+      displayName: 'Install Dependencies'
+
+    - script: |
+        npm run build
+      displayName: 'Build React App'
+
+    - script: |
+        echo "Checking if build directory exists..."
+        if exist "$(System.DefaultWorkingDirectory)\build" (
+          echo "✅ Build directory found!"
+          dir "$(System.DefaultWorkingDirectory)\build"
+        ) else (
+          echo "❌ Build directory NOT found!"
+          exit /b 1
+        )
+      displayName: 'Verify Build Directory'
+
+    - task: CopyFiles@2
+      inputs:
+        SourceFolder: '$(System.DefaultWorkingDirectory)/build'
+        Contents: '**'
+        TargetFolder: '$(Build.ArtifactStagingDirectory)'
+      displayName: 'Copy Build Output to Artifact Staging Directory'
+
+    - task: PublishBuildArtifacts@1
+      inputs:
+        pathToPublish: '$(Build.ArtifactStagingDirectory)'
+        artifactName: 'react-app-universal'
+        publishLocation: 'Container'
+      displayName: 'Publish Build Artifacts'
+
+    - task: UniversalPackages@0
+      inputs:
+        command: 'publish'
+        publishDirectory: '$(Build.ArtifactStagingDirectory)'  # React build output
+        feedsToUse: 'internal'
+        vstsFeed: 'BHDevopsProject/AzureUniReactDemo'  # ✅ Replace with your feed name
+        packageName: 'react-app-build'
+        packageVersion: '1.0.$(Build.BuildId)'
+      displayName: 'Publish React App as Universal Package'
