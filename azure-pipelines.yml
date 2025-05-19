@@ -68,7 +68,8 @@ stages:
         command: 'publish'
         publishDirectory: '$(Build.ArtifactStagingDirectory)'  # React build output
         feedsToUse: 'internal'
+        vstsFeedPublish: 'def2fab0-a38f-4e7f-9929-8fadf616fb9b/555c1733-90a1-4d80-9ab3-c5da9c1bfa91'
         vstsFeed: 'AzureUniReactDemo'  # ✅ Replace with your feed name
-        packageName: 'react-app-build'
-        packageVersion: '1.0.$(Build.BuildId)'
+        arguments: '--name react-app-build --version 1.0.$(Build.BuildId)'
       displayName: 'Publish React App as Universal Package'
+
