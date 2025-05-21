@@ -1,6 +1,9 @@
 name: 'SelfHostedLocal'
 
-trigger: none  # Disable CI for this repo
+trigger:
+  branches:
+    exclude:
+      - '*'  # Disable trigger from current repo
 
 resources:
   repositories:
