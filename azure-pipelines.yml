@@ -59,12 +59,12 @@ stages:
         TargetFolder: '$(Build.ArtifactStagingDirectory)'
       displayName: 'Copy Build Output to Artifact Staging Directory'
 
-    # - task: PublishBuildArtifacts@1
-    #   inputs:
-    #     pathToPublish: '$(Build.ArtifactStagingDirectory)'
-    #     artifactName: 'react-app-universal'
-    #     publishLocation: 'Container'
-    #   displayName: 'Publish Build Artifacts'
+    - task: PublishBuildArtifacts@1
+      inputs:
+        pathToPublish: '$(Build.ArtifactStagingDirectory)'
+        artifactName: 'react-app-universal'
+        publishLocation: 'Container'
+      displayName: 'Publish Build Artifacts'
 
     - task: UniversalPackages@0
       inputs:
