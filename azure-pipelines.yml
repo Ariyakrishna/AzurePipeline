@@ -66,13 +66,24 @@ stages:
         publishLocation: 'Container'
       displayName: 'Publish Build Artifacts'
 
+    # - task: UniversalPackages@0
+    #   inputs:
+    #     command: 'publish'
+    #     publishDirectory: '$(Build.ArtifactStagingDirectory)'  # React build output
+    #     feedsToUse: 'internal'
+    #     vstsFeedPublish: 'def2fab0-a38f-4e7f-9929-8fadf616fb9b/555c1733-90a1-4d80-9ab3-c5da9c1bfa91'
+    #     vstsFeed: 'AzureUniReactDemo'  # ✅ Replace with your feed name
+    #     arguments: '--name react-app-build --version 1.0.$(Build.BuildId)'
+    #   displayName: 'Publish React App as Universal Package'
+
     - task: UniversalPackages@0
+      displayName: 'Publish React App as Universal Package'
       inputs:
         command: 'publish'
-        publishDirectory: '$(Build.ArtifactStagingDirectory)'  # React build output
-        feedsToUse: 'internal'
+        publishDirectory: '$(Build.ArtifactStagingDirectory)'
         vstsFeedPublish: 'def2fab0-a38f-4e7f-9929-8fadf616fb9b/555c1733-90a1-4d80-9ab3-c5da9c1bfa91'
-        vstsFeed: 'AzureUniReactDemo'  # ✅ Replace with your feed name
-        arguments: '--name react-app-build --version 1.0.$(Build.BuildId)'
-      displayName: 'Publish React App as Universal Package'
-
+        vstsFeedPackagePublish: 'react-app-build'  # Ensure this is lowercase and valid
+        versionOption: 'custom'
+        versionPublish: '1.0.$(Build.BuildId)'
+        packagePublishDescription: 'React app build package'
+    
